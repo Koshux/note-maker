@@ -8,6 +8,7 @@
 		<version>2.1.7.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.lanzonprojects</groupId>
 	<artifactId>notes-keeper</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -16,6 +17,8 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<crnk.version>2.4.20171211095351</crnk.version>
+		<okhttp.version>3.9.1</okhttp.version>
 	</properties>
 
 	<dependencies>
@@ -28,6 +31,30 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- crnk -->
+		<dependency>
+			<groupId>io.crnk</groupId>
+			<artifactId>crnk-core</artifactId>
+			<version>${crnk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.crnk</groupId>
+			<artifactId>crnk-spring</artifactId>
+			<version>${crnk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.crnk</groupId>
+			<artifactId>crnk-client</artifactId>
+			<version>${crnk.version}</version>
+		</dependency>
+
+		<!-- okhttp -->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp.version}</version>
 		</dependency>
 	</dependencies>
 
