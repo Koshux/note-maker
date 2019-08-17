@@ -18,7 +18,7 @@ public class NoteClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteClient.class);
 
-    private CrnkClient crnkClient = new CrnkClient("http://localhost:9090/lanzonprojects/api");
+    private CrnkClient crnkClient = new CrnkClient("http://localhost:8081/lanzonprojects/api");
     private ResourceRepositoryV2<Note, Long> resourceRepositoryV2;
 
     @PostConstruct

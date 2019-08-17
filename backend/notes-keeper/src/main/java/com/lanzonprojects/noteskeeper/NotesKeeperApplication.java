@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class NotesKeeperApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(NotesKeeperApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(NotesKeeperApplication.class, args);
+    }
 }

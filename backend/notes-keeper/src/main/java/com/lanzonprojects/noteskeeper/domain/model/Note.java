@@ -1,5 +1,6 @@
 package com.lanzonprojects.noteskeeper.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.hibernate.validator.constraints.Length;
@@ -13,9 +14,11 @@ public class Note {
     @JsonApiId
     private long id;
 
+    @JsonProperty
     @Length(max = 20)
     private String title;
 
+    @JsonProperty
     @Length(max = 100)
     private String description;
 
