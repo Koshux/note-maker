@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
  * @author lanzon-projects
  */
 @JsonApiResource(type = "notes")
-public class Note {
+public class NoteResource {
 
     @JsonApiId
     private long id;
@@ -22,17 +22,17 @@ public class Note {
     @Length(max = 100)
     private String description;
 
-    public Note() {
+    public NoteResource() {
         super();
     }
 
-    public Note(long id, String title) {
+    public NoteResource(long id, String title) {
         this.id = id;
         this.title = title;
     }
 
 
-    public Note(long id, String title, String description) {
+    public NoteResource(long id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;

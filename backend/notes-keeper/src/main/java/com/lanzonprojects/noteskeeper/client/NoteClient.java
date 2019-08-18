@@ -1,6 +1,6 @@
 package com.lanzonprojects.noteskeeper.client;
 
-import com.lanzonprojects.noteskeeper.domain.model.Note;
+import com.lanzonprojects.noteskeeper.domain.model.NoteResource;
 import io.crnk.client.CrnkClient;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -19,17 +19,17 @@ public class NoteClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteClient.class);
 
     private CrnkClient crnkClient = new CrnkClient("http://localhost:8081/lanzonprojects/api");
-    private ResourceRepositoryV2<Note, Long> resourceRepositoryV2;
+    private ResourceRepositoryV2<NoteResource, Long> resourceRepositoryV2;
 
     @PostConstruct
     public void init() {
-        resourceRepositoryV2 = crnkClient.getRepositoryForType(Note.class);
+        resourceRepositoryV2 = crnkClient.getRepositoryForType(NoteResource.class);
     }
 
-    public Note findOne(long id) {
-        final Note note = resourceRepositoryV2.findOne(id, new QuerySpec(Note.class));
+    public NoteResource findOne(long id) {
+        final NoteResource noteResource = resourceRepositoryV2.findOne(id, new QuerySpec(NoteResource.class));
 
-        LOGGER.info("found {}", note.toString());
-        return note;
+        LOGGER.info("found {}", noteResource.toString());
+        return noteResource;
     }
 }
