@@ -1,34 +1,55 @@
 # note-maker
 Quick full-stack solution to create (modify as well as delete) notes.  This tool also features sorting and pagination.
 
-#Backend
+##Requirements to run
+ - Latest version of MySQL (have not tested on older versions but are likely compatible).
+ - JDK/JRE 8
 
-## Commands to startup the API
-###Standard mode
+##Additional Requirements to compile
+ - Maven
+
+##Backend
+ - Application will start on port 8081.
+
+### Starting up the API
+####Running as a packaged application
+https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot-running-as-a-packaged-application
+
+#####Standard mode
 java -jar target/notes-keeper-0.0.1-SNAPSHOT.jar
 
-###Debug mode
+#####Debug mode
 java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8082 -jar target/notes-keeper-0.0.1-SNAPSHOT.jar
 
 ###Tools
-#####SpringBoot
+####SpringBoot
  - Great solution to create a micro-service
  - Lots of support by other frameworks/modules
  - `crnk` & `jOOQ` provide spring-boot modules
 
-#####crnk
+####crnk
  - Creation of Model and Repository (similar to the MVC pattern)
  - Out-of-the-box support filtering, paging & sorting abilities
  - Built to respect the JSON-API specification
 
-#####jOOQ
+####jOOQ
  - ORM mapper and code-generator
  - Connection pooling abilities
  - Provides an easy-to-use API to query the database and perform CRUD operations
 
-#Frontend
+####Assumptions
+ - Since I opted for the `crnk` framework which has limited support for Jackson annotations,
+   I decided to perform validation of the length of each field/column before performing the
+   insert operation.
+    - This could be alleviated by creating a custom length annotation, a new class which
+      each resource will extend and a utility class whereby each of these resources will be
+      parsed and validated before resuming execution to the CRUD methods in the implemented
+      repository.
 
-## Commands to start frontend web-app
+##Frontend
+ - Application will start on port 3000
+
+### Starting up the frontend web-app
 npm start
 
 ###Tools
@@ -43,12 +64,5 @@ npm start
  - Like `bootstrap` but using ReactJS virtual DOM and components
  - Ready-made Datatable open-source packages supporting remote-data fetching
 
-
-###Assumptions
- - Since I opted for the `crnk` framework which has limited support for Jackson annotations,
-   I decided to perform validation of the length of each field/column before performing the
-   insert operation.
-    - This could be alleviated by creating a custom length annotation, a new class which
-      each resource will extend and a utility class whereby each of these resources will be
-      parsed and validated before resuming execution to the CRUD methods in the implemented
-      repository.
+##Assumptions
+ - TODO: <frontend-assumptions>
