@@ -14,28 +14,28 @@ import javax.sql.DataSource;
 /**
  * @author lanzon-projects
  */
-@Configuration
-public class InitialConfiguration {
-
-    @Autowired
-    private DataSource dataSource;
-
-    @Bean
-    public DataSourceConnectionProvider connectionProvider() {
-        return new DataSourceConnectionProvider(new TransactionAwareDataSourceProxy(dataSource));
-    }
-
-    @Bean
-    public DefaultDSLContext dsl() {
-        return new DefaultDSLContext(configuration());
-    }
-
-    public DefaultConfiguration configuration() {
-        final DefaultConfiguration jooqConfiguration = new DefaultConfiguration();
-
-        jooqConfiguration.set(connectionProvider());
-        jooqConfiguration.set(new DefaultExecuteListenerProvider(new ExceptionTranslator()));
-
-        return jooqConfiguration;
-    }
-}
+//@Configuration
+//public class InitialConfiguration {
+//
+//    @Autowired
+//    private DataSource dataSource;
+//
+//    @Bean
+//    public DataSourceConnectionProvider connectionProvider() {
+//        return new DataSourceConnectionProvider(new TransactionAwareDataSourceProxy(dataSource));
+//    }
+//
+//    @Bean
+//    public DefaultDSLContext dsl() {
+//        return new DefaultDSLContext(configuration());
+//    }
+//
+//    public DefaultConfiguration configuration() {
+//        final DefaultConfiguration jooqConfiguration = new DefaultConfiguration();
+//
+//        jooqConfiguration.set(connectionProvider());
+//        jooqConfiguration.set(new DefaultExecuteListenerProvider(new ExceptionTranslator()));
+//
+//        return jooqConfiguration;
+//    }
+//}

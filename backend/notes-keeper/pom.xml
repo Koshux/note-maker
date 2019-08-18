@@ -21,53 +21,32 @@
         <okhttp.version>3.9.1</okhttp.version>
         <sql-maven.version>1.5</sql-maven.version>
         <crnk.version>2.4.20171211095351</crnk.version>
-        <mysql.version>6.0.3</mysql.version>
+        <mysql.version>8.0.11</mysql.version>
         <maven-properties.version>1.0.0</maven-properties.version>
     </properties>
 
     <dependencies>
-        <!-- MySQL Connector -->
+        <!-- H2 & MySQL Connector -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
         </dependency>
 
         <!-- jOOQ Essentials -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jooq</artifactId>
-
-            <!-- Exclude the default jOOQ dependency if
-                 1. You want a more or less recent jOOQ dependency
-                 2. You want to depend on a commercial jOOQ distribution
-              -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jooq</groupId>
-                    <artifactId>jooq</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
-        <!-- Keep this explicit dependency only if you excluded jOOQ above -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-            <version>${jooq.version}</version>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>com.h2database</groupId>-->
-            <!--<artifactId>h2</artifactId>-->
-            <!--<version>${h2.version}</version>-->
-        <!--</dependency>-->
-
+        <!-- Spring Boot Essentials -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -99,6 +78,97 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>h2</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jooq</groupId>
+                        <artifactId>jooq-codegen-maven</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.h2database</groupId>
+                                <artifactId>h2</artifactId>
+                                <version>${h2.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <jdbc>
+                                <driver>org.h2.Driver</driver>
+                                <url>jdbc:h2:~/notes-keeper</url>
+                            </jdbc>
+                            <generator>
+                                <name>org.jooq.util.DefaultGenerator</name>
+                                <database>
+                                    <name>org.jooq.util.h2.H2Database</name>
+                                    <includes>.*</includes>
+                                    <excludes />
+                                    <inputSchema>PUBLIC</inputSchema>
+                                </database>
+                                <packageName>com.lanzonprojects.noteskeeper.jooq.generated</packageName>
+                                <directory>src/main/java/</directory>
+                            </generator>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>mysql</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jooq</groupId>
+                        <artifactId>jooq-codegen-maven</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>mysql</groupId>
+                                <artifactId>mysql-connector-java</artifactId>
+                                <version>${mysql.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <jdbc>
+                                <driver>com.mysql.cj.jdbc.Driver</driver>
+                                <url>jdbc:mysql://localhost:3306/notemaker</url>
+                                <user>root</user>
+                                <password>root</password>
+                            </jdbc>
+                            <generator>
+                                <name>org.jooq.util.DefaultGenerator</name>
+                                <database>
+                                    <name>org.jooq.util.mysql.MySQLDatabase</name>
+                                    <includes>.*</includes>
+                                    <excludes />
+                                    <inputSchema>notemaker</inputSchema>
+                                </database>
+                                <target>
+                                    <packageName>com.lanzonprojects.noteskeeper.jooq.generated</packageName>
+                                    <directory>src/main/java/</directory>
+                                </target>
+                            </generator>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -106,109 +176,19 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Properties Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>${maven-properties.version}</version>
-
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>read-project-properties</goal>
-                        </goals>
-
-                        <configuration>
-                            <files>
-                                <file>src/main/resources/application.properties</file>
-                            </files>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- SQL Maven Plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sql-maven-plugin</artifactId>
-                <version>${sql-maven.version}</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <driver>${db.driver}</driver>
-                            <url>${db.url}</url>
-                            <username>${db.username}</username>
-                            <password>${db.password}</password>
-                            <!--<driver>com.mysql.cj.jdbc.Driver</driver>-->
-                            <!--<url>jdbc:mysql://localhost:3306/demo?serverTimezone=UTC</url>-->
-                            <!--<username>root</username>-->
-                            <!--<password></password>-->
-                            <srcFiles>
-                                <srcFile>src/main/resources/schema.sql</srcFile>
-                            </srcFiles>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <!--<dependency>-->
-                        <!--<groupId>com.h2database</groupId>-->
-                        <!--<artifactId>h2</artifactId>-->
-                        <!--<version>${h2.version}</version>-->
-                    <!--</dependency>-->
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>${mysql.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <!-- jOOQ Code Generator Plugin -->
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>${jooq.version}</version>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>add-source</goal>
                         </goals>
                         <configuration>
-                            <jdbc>
-                                <driver>${db.driver}</driver>
-                                <url>${db.url}</url>
-                                <username>${db.username}</username>
-                                <password>${db.password}</password>
-                                <!--<driver>com.mysql.cj.jdbc.Driver</driver>-->
-                                <!--<url>jdbc:mysql://localhost:3306/demo?serverTimezone=UTC</url>-->
-                                <!--<username>root</username>-->
-                                <!--<password></password>-->
-                            </jdbc>
-                            <generator>
-                                <database>
-                                    <!--<name>org.jooq.meta.h2.H2Database</name>-->
-                                    <name>org.jooq.util.mysql.MySQLDatabase</name>
-                                    <includes>.*</includes>
-                                    <excludes></excludes>
-                                    <dateAsTimestamp>true</dateAsTimestamp>
-                                    <inputSchema>demo</inputSchema>
-                                </database>
-                                <generate>
-                                    <deprecated>false</deprecated>
-                                    <instanceFields>true</instanceFields>
-                                    <pojos>true</pojos>
-                                </generate>
-                                <target>
-                                    <packageName>com.lanzonprojects.noteskeeper.jooq.generated</packageName>
-                                    <directory>src/main/java</directory>
-                                </target>
-                            </generator>
+                            <sources>
+                                <source>src/main/java/jooq/generated</source>
+                            </sources>
                         </configuration>
                     </execution>
                 </executions>
