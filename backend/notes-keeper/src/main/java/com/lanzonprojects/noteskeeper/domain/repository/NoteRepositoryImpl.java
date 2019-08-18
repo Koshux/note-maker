@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,24 +26,24 @@ import java.util.Map;
 public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Long> {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteRepositoryImpl.class);
 
-    private Map<Long, NoteResource> notes = new HashMap<>();
+    // private Map<Long, NoteResource> notes = new HashMap<>();
 
     @Autowired
     private DSLContext dslContext;
 
     public NoteRepositoryImpl() {
         super(NoteResource.class);
-        LOGGER.info("found initialized repository.");
-
-        for (long i = 0; i < 100; i++) {
+        /*for (long i = 0; i < 100; i++) {
             notes.put(i, new NoteResource(i, "Welcome", "Hello World!"));
-        }
+        }*/
     }
 
     @Override
     public synchronized ResourceList<NoteResource> findAll(QuerySpec querySpec) {
-        System.out.println("Found DSLContext" + dslContext);
-        return querySpec.apply(notes.values());
+        final List<NoteResource> noteResources = dslContext.select().from(Note.NOTE).fetchInto(NoteResource.class);
+        LOGGER.debug("Found notes: {}", noteResources);
+
+        return querySpec.apply(noteResources);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         // Find the max ID from the `note` table.
         final Integer maxId = dslContext.select(DSL.max(noteTable.ID)).from(noteTable).fetchOneInto(Integer.class);
+        LOGGER.debug("Creating new note with ID: {}", maxId + 1);
 
         // Increment max-id by 1 and add the new note.
         int inserted = dslContext
@@ -62,6 +64,8 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         // Discard failed attempts to insert and notify the user.
         if (inserted == 0) {
+            LOGGER.error("Failed to create the new note with ID: {}", maxId + 1);
+            LOGGER.error("Note Title: ", entity.getTitle() + "; Note Description: " + entity.getDescription());
             throw new InternalServerErrorException("Something went wrong while trying to save the note," +
                                                        " please try again.");
         }
@@ -74,6 +78,7 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
                   .and(noteTable.TITLE.equal(entity.getTitle()))
                   .fetchOneInto(NoteResource.class);
         */
+        LOGGER.debug("Note successfully created");
         return entity;
     }
 }
