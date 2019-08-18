@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -49,11 +51,13 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
     public synchronized <S extends NoteResource> S create(S entity) {
         final Note noteTable = Note.NOTE;
 
+        // Column-size validation against note-title input.
         if (entity.getTitle().length() > noteTable.TITLE.getDataType().length()) {
             LOGGER.error("Note title: '", entity.getTitle() + "' length must be between 1 and 20.");
             throw new BadRequestException("'title' length must be between 1 and 20..");
         }
 
+        // Column-size validation against note-description input.
         if (entity.getDescription().length() > noteTable.DESCRIPTION.getDataType().length()) {
             LOGGER.error("Note description: '", entity.getDescription() + "' length must be between 1 and 100.");
             throw new BadRequestException("'description' length must be between 1 and 100.");
@@ -61,13 +65,14 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         // Find the max ID from the `note` table and increment by 1 for the next note ID.
         final int nextNoteId = dslContext.select(DSL.max(noteTable.ID)).from(noteTable).fetchOneInto(Integer.class) + 1;
-        LOGGER.debug("Creating new note with ID: {}", nextNoteId);
+        final Timestamp creationDate = Timestamp.from(Instant.now());
 
         // Adds the new note.
+        LOGGER.debug("Creating new note with ID: {}", nextNoteId);
         int inserted = dslContext
             .insertInto(noteTable)
-            .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION)
-            .values(nextNoteId, entity.getTitle(), entity.getDescription())
+            .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION, noteTable.CREATION_DATE)
+            .values(nextNoteId, entity.getTitle(), entity.getDescription(), creationDate)
             .execute();
 
         // Discard failed attempts to insert and notify the user.
@@ -78,9 +83,11 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
                                                        " please try again.");
         }
 
-        // Update the entity ID with what was persisted.
+        // Update the entity `ID` and `creationDate` with what was persisted.
         entity.setId(nextNoteId);
-        LOGGER.debug("Note successfully created");
+        entity.setCreationDate(creationDate);
+
+        LOGGER.debug("Note successfully created.");
         return entity;
     }
 }

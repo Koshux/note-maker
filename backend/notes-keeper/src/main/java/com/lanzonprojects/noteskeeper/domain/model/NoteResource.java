@@ -4,6 +4,9 @@ import io.crnk.core.resource.annotations.JsonApiField;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiResource;
 
+import java.sql.Timestamp;
+
+
 /**
  * @author lanzon-projects
  */
@@ -15,7 +18,7 @@ public class NoteResource {
     private long id;
 
     @JsonApiField(patchable = false, postable = false)
-    private String creationDate;
+    private Timestamp creationDate;
 
     private String title;
     private String description;
@@ -28,11 +31,11 @@ public class NoteResource {
         this.id = id;
     }
 
-    public String getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 
