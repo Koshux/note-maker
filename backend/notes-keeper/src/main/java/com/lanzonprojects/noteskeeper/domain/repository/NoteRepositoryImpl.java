@@ -51,33 +51,27 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
         System.out.println("Found DSLContext" + dslContext);
         Note noteTable = Note.NOTE;
 
-        // Find the max ID from the `note` table.
-        final Integer maxId = dslContext.select(DSL.max(noteTable.ID)).from(noteTable).fetchOneInto(Integer.class);
-        LOGGER.debug("Creating new note with ID: {}", maxId + 1);
+        // Find the max ID from the `note` table and increment by 1 for the next note ID.
+        final int nextNoteId = dslContext.select(DSL.max(noteTable.ID)).from(noteTable).fetchOneInto(Integer.class) + 1;
+        LOGGER.debug("Creating new note with ID: {}", nextNoteId);
 
-        // Increment max-id by 1 and add the new note.
+        // Adds the new note.
         int inserted = dslContext
             .insertInto(noteTable)
             .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION)
-            .values(maxId + 1, entity.getTitle(), entity.getDescription())
+            .values(nextNoteId, entity.getTitle(), entity.getDescription())
             .execute();
 
         // Discard failed attempts to insert and notify the user.
         if (inserted == 0) {
-            LOGGER.error("Failed to create the new note with ID: {}", maxId + 1);
+            LOGGER.error("Failed to create the new note with ID: {}", nextNoteId);
             LOGGER.error("Note Title: ", entity.getTitle() + "; Note Description: " + entity.getDescription());
             throw new InternalServerErrorException("Something went wrong while trying to save the note," +
                                                        " please try again.");
         }
 
-        // Return the note that was just persisted.
-        /*
-        dslContext.select()
-                  .from(noteTable)
-                  .where(noteTable.ID.equal(Math.toIntExact(entity.getId()) + 1))
-                  .and(noteTable.TITLE.equal(entity.getTitle()))
-                  .fetchOneInto(NoteResource.class);
-        */
+        // Update the entity ID with what was persisted.
+        entity.setId(nextNoteId);
         LOGGER.debug("Note successfully created");
         return entity;
     }
