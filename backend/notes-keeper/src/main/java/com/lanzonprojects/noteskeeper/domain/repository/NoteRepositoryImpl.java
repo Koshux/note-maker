@@ -27,16 +27,11 @@ import java.util.List;
 public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Long> {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteRepositoryImpl.class);
 
-    // private Map<Long, NoteResource> notes = new HashMap<>();
-
     @Autowired
     private DSLContext dslContext;
 
     public NoteRepositoryImpl() {
         super(NoteResource.class);
-        /*for (long i = 0; i < 100; i++) {
-            notes.put(i, new NoteResource(i, "Welcome", "Hello World!"));
-        }*/
     }
 
     @Override
@@ -89,5 +84,15 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         LOGGER.debug("Note successfully created.");
         return entity;
+    }
+
+    @Override
+    public void delete(Long id) {
+        int execute = dslContext.deleteFrom(Note.NOTE).where(Note.NOTE.ID.equal(Math.toIntExact(id))).execute();
+
+        if (execute == 0) {
+            throw new InternalServerErrorException("Something went wrong while trying to delete the note," +
+                                                       " please try again.");
+        }
     }
 }
