@@ -36,12 +36,11 @@ public class PersistenceContext {
     @Bean(destroyMethod = "close")
     public DataSource dataSource() {
         org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
-//        DataSourceConnectionProvider dataSourceConnectionProvider = new DataSourceConnectionProvider();
 
-        dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
         dataSource.setUrl(env.getRequiredProperty("db.url"));
         dataSource.setUsername(env.getRequiredProperty("db.user"));
         dataSource.setPassword(env.getRequiredProperty("db.password"));
+        dataSource.setDriverClassName(env.getRequiredProperty("db.driver"));
 
         return dataSource;
     }
