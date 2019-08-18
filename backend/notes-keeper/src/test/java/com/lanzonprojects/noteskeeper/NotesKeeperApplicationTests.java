@@ -23,7 +23,6 @@ public class NotesKeeperApplicationTests {
 
     @Test
     public void testFindOne() {
-        System.out.println("Has the DSLContext been found:" + dslContext);
         Assert.assertEquals(noteClient.findOne(1L).getDescription(), "Hello World!");
     }
 }
