@@ -2,6 +2,7 @@ package com.lanzonprojects.noteskeeper.domain.repository;
 
 import com.lanzonprojects.noteskeeper.domain.model.NoteResource;
 import com.lanzonprojects.noteskeeper.jooq.generated.tables.Note;
+import io.crnk.core.exception.BadRequestException;
 import io.crnk.core.exception.InternalServerErrorException;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryBase;
@@ -14,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author lanzon-projects
@@ -48,8 +47,17 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
     @Override
     public synchronized <S extends NoteResource> S create(S entity) {
-        System.out.println("Found DSLContext" + dslContext);
-        Note noteTable = Note.NOTE;
+        final Note noteTable = Note.NOTE;
+
+        if (entity.getTitle().length() > noteTable.TITLE.getDataType().length()) {
+            LOGGER.error("Note title: '", entity.getTitle() + "' length must be between 1 and 20.");
+            throw new BadRequestException("'title' length must be between 1 and 20..");
+        }
+
+        if (entity.getDescription().length() > noteTable.DESCRIPTION.getDataType().length()) {
+            LOGGER.error("Note description: '", entity.getDescription() + "' length must be between 1 and 100.");
+            throw new BadRequestException("'description' length must be between 1 and 100.");
+        }
 
         // Find the max ID from the `note` table and increment by 1 for the next note ID.
         final int nextNoteId = dslContext.select(DSL.max(noteTable.ID)).from(noteTable).fetchOneInto(Integer.class) + 1;
