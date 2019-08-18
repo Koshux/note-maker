@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "83dcf7c0-450f-4c86-986f-a52ce9ed5c8a",
 		"name": "Notes API",
+		"_postman_id": "8973a889-368d-74ae-bcbf-a8f848dce5b2",
 		"description": "API Collection for the `note-maker` tool.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -17,6 +17,10 @@
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "http://localhost:8081/lanzonprojects/api/notes",
 					"protocol": "http",
@@ -41,14 +45,12 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
+						"value": "application/vnd.api+json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\ttype: \"notes\",\n\tattributes: {\n\t\ttitle: \"Test title 2\",\n\t\tdescription: \"Test description...\"\n\t}\n}"
+					"raw": "{\n\t\"data\": {\n\t\t\"type\": \"notes\",\n\t\t\"attributes\": {\n\t\t\t\"title\": \"Test title 12\",\n\t\t\t\"description\": \"Test description...\",\n\t\t\t\"creationDate\": 1566161999000\n\t\t}\n\t}\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8081/lanzonprojects/api/notes",
