@@ -1,9 +1,8 @@
 package com.lanzonprojects.noteskeeper.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.crnk.core.resource.annotations.JsonApiField;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiResource;
-import org.hibernate.validator.constraints.Length;
 
 /**
  * @author lanzon-projects
@@ -12,31 +11,14 @@ import org.hibernate.validator.constraints.Length;
 public class NoteResource {
 
     @JsonApiId
+    @JsonApiField(patchable = false, postable = false)
     private long id;
 
-    @JsonProperty
-    @Length(max = 20)
+    @JsonApiField(patchable = false, postable = false)
+    private String creationDate;
+
     private String title;
-
-    @JsonProperty
-    @Length(max = 100)
     private String description;
-
-    public NoteResource() {
-        super();
-    }
-
-    public NoteResource(long id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-
-    public NoteResource(long id, String title, String description) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-    }
 
     public long getId() {
         return id;
@@ -44,6 +26,14 @@ public class NoteResource {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getTitle() {
@@ -64,10 +54,11 @@ public class NoteResource {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Note{");
+        final StringBuilder sb = new StringBuilder("NoteResource{");
         sb.append("id=").append(id);
         sb.append(", title='").append(title).append('\'');
         sb.append(", description='").append(description).append('\'');
+        sb.append(", creationDate='").append(creationDate).append('\'');
         sb.append('}');
         return sb.toString();
     }

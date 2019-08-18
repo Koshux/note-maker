@@ -8,7 +8,8 @@ CREATE TABLE author (
 CREATE TABLE note (
     id              INT             NOT NULL PRIMARY KEY,
     title           VARCHAR(20)     NOT NULL,
-    description     VARCHAR(100)    NOT NULL
+    description     VARCHAR(100)    NOT NULL,
+    creationDate    TIMESTAMP       NOT NULL
 );
 
 CREATE TABLE note_author (
