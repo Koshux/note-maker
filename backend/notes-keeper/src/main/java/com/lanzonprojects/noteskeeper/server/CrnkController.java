@@ -20,7 +20,7 @@ public class CrnkController {
     @Autowired
     private ResourceRegistry resourceRegistry;
 
-    @RequestMapping("/resourcesInfo")
+    @RequestMapping("/resources-info")
     public Map<String, String> getResources() {
         return resourceRegistry
             .getResources()
