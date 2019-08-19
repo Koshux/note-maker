@@ -48,13 +48,13 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         // Column-size validation against note-title input.
         if (entity.getTitle().length() > noteTable.TITLE.getDataType().length()) {
-            LOGGER.error("Note title: '", entity.getTitle() + "' length must be between 1 and 20.");
-            throw new BadRequestException("'title' length must be between 1 and 20..");
+            LOGGER.error(String.format("Note title: '%s' length must be between 1 and 20.", entity.getTitle()));
+            throw new BadRequestException("'title' length must be between 1 and 20.");
         }
 
         // Column-size validation against note-description input.
         if (entity.getDescription().length() > noteTable.DESCRIPTION.getDataType().length()) {
-            LOGGER.error("Note description: '", entity.getDescription() + "' length must be between 1 and 100.");
+            LOGGER.error(String.format("Note description: '%s' length must be between 1 and 100.", entity.getTitle()));
             throw new BadRequestException("'description' length must be between 1 and 100.");
         }
 
@@ -65,17 +65,16 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
         // Adds the new note.
         LOGGER.debug("Creating new note with ID: {}", nextNoteId);
         int inserted = dslContext
-            .insertInto(noteTable)
-            .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION, noteTable.CREATION_DATE)
-            .values(nextNoteId, entity.getTitle(), entity.getDescription(), creationDate)
-            .execute();
+                .insertInto(noteTable)
+                .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION, noteTable.CREATION_DATE)
+                .values(nextNoteId, entity.getTitle(), entity.getDescription(), creationDate)
+                .execute();
 
         // Discard failed attempts to insert and notify the user.
         if (inserted == 0) {
             LOGGER.error("Failed to create the new note with ID: {}", nextNoteId);
             LOGGER.error("Note Title: ", entity.getTitle() + "; Note Description: " + entity.getDescription());
-            throw new InternalServerErrorException("Something went wrong while trying to save the note," +
-                                                       " please try again.");
+            throw new InternalServerErrorException("Something went wrong while creating the note, please try again.");
         }
 
         // Update the entity `ID` and `creationDate` with what was persisted.
@@ -87,12 +86,11 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
     }
 
     @Override
-    public void delete(Long id) {
+    public synchronized void delete(Long id) {
         int execute = dslContext.deleteFrom(Note.NOTE).where(Note.NOTE.ID.equal(Math.toIntExact(id))).execute();
 
         if (execute == 0) {
-            throw new InternalServerErrorException("Something went wrong while trying to delete the note," +
-                                                       " please try again.");
+            throw new InternalServerErrorException("Something went wrong while deleting the note, please try again.");
         }
     }
 }

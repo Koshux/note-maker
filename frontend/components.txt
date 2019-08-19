@@ -1,0 +1,33 @@
+Frontend components for `note-maker`:
+-------------------------------------
+- Unsaved Notes
+  - Parent note container to store all notes to persist to DB (lost on refresh)
+  - state = { remoteNotes: [], localNotes: [] }
+- Interface/store for requests
+  - CREATE
+  - FIND_ALL -> returns totalResourceCount
+- Note creator
+  - const [localNotes, setLocalNotes] = React.useState(0)
+  - localNotes.push(document.getElement('input').value()) // the value of the input field
+  - Input field
+  - "Send" button can send one to many notes
+    - setLocalNotes([]) (empty out array)
+- Notes viewer (datatable):
+  - Columns:
+    - Description
+    - Creation Date
+  - Features:
+    - Load notes from http://localhost:8081/lanzonprojects/api/notes
+    - Sort by Creation Date [ASC|DESC]
+    - Pagination with 10 records per page
+      - Next/Prev changes limit & offset on JSON:API request
+
+
+index.js --> ReactJS entrypoint renders app.js (React.render(<App />)
+App.js --> Parent container for entire app
+
+					app
+					 |
+	--------------------------------------------------------------------
+	|								   |
+   note-creator							      notes-viewer
