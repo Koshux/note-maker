@@ -31,3 +31,18 @@ App.js --> Parent container for entire app
 	--------------------------------------------------------------------
 	|								   |
    note-creator							      notes-viewer
+
+
+Tutorials:
+-----------
+Notes app using React Hooks:
+----------------------------
+1. https://blog.flexiple.com/react-hooks-learn-by-building-a-notes-app/
+
+material-table:
+---------------
+1. https://material-table.com/#/docs/features/sorting
+
+material-ui (reactjs):
+----------------------
+1. https://material-ui.com/components/grid/
