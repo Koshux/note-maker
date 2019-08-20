@@ -38,6 +38,8 @@ Tutorials:
 Notes app using React Hooks:
 ----------------------------
 1. https://blog.flexiple.com/react-hooks-learn-by-building-a-notes-app/
+2. Auto-focus on input field:
+ 2.1. https://reactjs.org/docs/refs-and-the-dom.html#adding-a-ref-to-a-class-component
 
 material-table:
 ---------------
