@@ -1,14 +1,34 @@
 import React from 'react'
+import Input from '@material-ui/core/Input'
+import { makeStyles } from '@material-ui/core/styles'
 
-export default function Note () {
-  const [data, setData] = React.useState([{
-    description: '',
-    creationDate: null
-  }])
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  input: {
+    margin: theme.spacing(1),
+  },
+}))
+
+export default function Note (props) {
+  const classes = useStyles()
+
+  function handleKeyUp (event) {
+    props.setData(event.target.value)
+  }
 
   return (
-    <div>
-
+    <div className={classes.container}>
+      <Input
+        fullWidth={true}
+        onKeyUp={handleKeyUp}
+        className={classes.input}
+        defaultValue={props.data}
+        placeholder="Enter note description"
+        inputProps={{maxLength: 100, 'aria-label': 'description'}}
+      />
     </div>
   )
 }

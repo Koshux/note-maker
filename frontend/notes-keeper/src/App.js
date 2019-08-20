@@ -1,8 +1,8 @@
 // import logo from './logo.svg';
 import IndexPage from './pages/index'
-import React, { Component } from 'react';
+import React from 'react';
 
-class App extends Component {
+class App extends React.PureComponent {
   state = {
     notes: {
       1: {
@@ -22,7 +22,7 @@ class App extends Component {
 
   render () {
     return (
-      <div className="App">
+      <div className="app">
         <IndexPage notes={this.state.notes} />
       </div>
     );

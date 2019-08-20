@@ -1,34 +1,35 @@
 import React from 'react'
-import DataTable from '../DataTable'
 import Note from '../components/note'
 import Send from '../components/send'
 import Navbar from '../components/navbar'
 import Grid from '@material-ui/core/Grid'
-import Container from '@material-ui/core/Container';
+import Container from '@material-ui/core/Container'
+import DataTable from '../components/notes-datatable'
 
-export default class IndexPage extends React.Component {
-  render () {
-    console.log(this)
-    return (
-      <React.Fragment>
-        <Navbar />
+export default function IndexPage (props) {
+  const [data, setData] = React.useState()
 
-        <Container fixed>
-          <Grid container maxWidth="sm" spacing={3}>
-            <Grid item xs={12}>
-            </Grid>
+  return (
+    <>
+      <Navbar />
 
-            <Grid item xs={12} display="center">
-              <Send />
-              <Note />
-            </Grid>
+      <Container fixed>
+        <Grid container spacing={3}>
+          <Grid item xs={12}></Grid>
 
-            <Grid item xs={12}>
-              <DataTable notes={this.props.notes} />
-            </Grid>
+          <Grid item xs={10}>
+            <Note note={data} setData={setData}/>
           </Grid>
-        </Container>
-      </React.Fragment>
-    )
-  }
+
+          <Grid item xs={2}>
+            <Send note={data}/>
+          </Grid>
+
+          <Grid item xs={12}>
+            <DataTable notes={props.notes} />
+          </Grid>
+        </Grid>
+      </Container>
+    </>
+  )
 }

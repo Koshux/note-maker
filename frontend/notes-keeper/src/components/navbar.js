@@ -19,7 +19,7 @@ export default function Navbar () {
       <AppBar position="static" color="default">
         <Toolbar>
           <Typography variant="h6" color="inherit">
-            note maker
+            Note Maker
           </Typography>
         </Toolbar>
       </AppBar>
