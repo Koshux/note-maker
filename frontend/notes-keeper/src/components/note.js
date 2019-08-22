@@ -25,9 +25,9 @@ export default function Note (props) {
         fullWidth={true}
         onKeyUp={handleKeyUp}
         className={classes.input}
-        defaultValue={props.data}
-        placeholder="Enter note description"
-        inputProps={{maxLength: 100, 'aria-label': 'description'}}
+        defaultValue={props.note}
+        placeholder='Enter note description'
+        inputProps={{maxLength: 100,'aria-label': 'description'}}
       />
     </div>
   )

@@ -22,7 +22,7 @@ export default function IndexPage (props) {
           </Grid>
 
           <Grid item xs={2}>
-            <Send note={data}/>
+            <Send note={data} setData={setData} />
           </Grid>
 
           <Grid item xs={12}>
