@@ -1,5 +1,6 @@
 package com.lanzonprojects.noteskeeper.domain.repository;
 
+import com.google.common.base.Strings;
 import com.lanzonprojects.noteskeeper.domain.model.NoteResource;
 import com.lanzonprojects.noteskeeper.jooq.generated.tables.Note;
 import io.crnk.core.exception.BadRequestException;
@@ -47,13 +48,15 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
         final Note noteTable = Note.NOTE;
 
         // Column-size validation against note-title input.
-        if (entity.getTitle().length() > noteTable.TITLE.getDataType().length()) {
+        boolean titleIsEmpty = Strings.isNullOrEmpty(entity.getTitle());
+        if (!titleIsEmpty && entity.getTitle().length() > noteTable.TITLE.getDataType().length()) {
             LOGGER.error(String.format("Note title: '%s' length must be between 1 and 20.", entity.getTitle()));
             throw new BadRequestException("'title' length must be between 1 and 20.");
         }
 
         // Column-size validation against note-description input.
-        if (entity.getDescription().length() > noteTable.DESCRIPTION.getDataType().length()) {
+        final String description = entity.getDescription();
+        if (description == null || description.length() > noteTable.DESCRIPTION.getDataType().length()) {
             LOGGER.error(String.format("Note description: '%s' length must be between 1 and 100.", entity.getTitle()));
             throw new BadRequestException("'description' length must be between 1 and 100.");
         }
@@ -67,13 +70,13 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
         int inserted = dslContext
                 .insertInto(noteTable)
                 .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION, noteTable.CREATION_DATE)
-                .values(nextNoteId, entity.getTitle(), entity.getDescription(), creationDate)
+                .values(nextNoteId, titleIsEmpty ? "Default" : entity.getTitle(), description, creationDate)
                 .execute();
 
         // Discard failed attempts to insert and notify the user.
         if (inserted == 0) {
             LOGGER.error("Failed to create the new note with ID: {}", nextNoteId);
-            LOGGER.error("Note Title: ", entity.getTitle() + "; Note Description: " + entity.getDescription());
+            LOGGER.error("Note Title: ", entity.getTitle() + "; Note Description: " + description);
             throw new InternalServerErrorException("Something went wrong while creating the note, please try again.");
         }
 
