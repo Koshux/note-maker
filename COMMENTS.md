@@ -33,6 +33,7 @@ the jar file:
     java -jar target/notes-keeper-0.0.1-SNAPSHOT.jar
 
 If you do not have the jar file available, run the following command first:
+
     mvn clean package -P mysql
 
 Note: This will start up the API on port 8081.
