@@ -1,3 +1,5 @@
+USE notemaker;
+
 INSERT INTO author VALUES
 (1, 'Richard Smith'),
 (2, 'John Ferry'),

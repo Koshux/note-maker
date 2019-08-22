@@ -20,7 +20,7 @@ export default function IndexPage (props) {
           <Grid item xs={10}>
             <Note
               note={data}
-              setData={setData}
+              setNote={setData}
             />
           </Grid>
 
@@ -33,7 +33,6 @@ export default function IndexPage (props) {
 
           <Grid item xs={12}>
             <DataTable
-              notes={props.notes}
               materialTableRef={props.materialTableRef}
             />
           </Grid>

@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS notemaker;
+
 DROP TABLE IF EXISTS note, author, note_author;
 
 CREATE TABLE author (

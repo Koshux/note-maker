@@ -2,15 +2,7 @@ import React from 'react'
 import Utils from './utils'
 import Button from '@material-ui/core/Button'
 
-// JSON:API headers for POST request.
-const requestOpts = {
-  method: 'POST',
-  cache: 'no-cache',
-  headers: { 'Content-Type': 'application/vnd.api+json' }
-}
-
 export default function Send (props) {
-
   // Build JSON:API compliant POST request body.
   const setupRequestData = () => {
     return {
@@ -25,14 +17,11 @@ export default function Send (props) {
 
   // Save the note to the DB.
   const handleClick = () => {
-    requestOpts.body = JSON.stringify(setupRequestData())
-    return fetch(Utils.ENDPOINT, requestOpts)
-      .then(response => response.json())
-      .then(() => {
-        // Refresh the notes datatable.
-        props.materialTableRef.current &&
-          props.materialTableRef.current.onQueryChange()
-      })
+    return Utils.createNote(JSON.stringify(setupRequestData())).then(() => {
+      // Refresh the notes datatable.
+      props.materialTableRef.current &&
+        props.materialTableRef.current.onQueryChange()
+    })
   }
 
   // No notes found.
@@ -43,8 +32,10 @@ export default function Send (props) {
       color='primary'
       variant='contained'
       fullWidth={true}
-      onClick={()=> handleClick()}
-      disabled={disabled}>
+      onClick={()=> handleClick}
+      disabled={disabled}
+      data-testid="send"
+    >
       Send
     </Button>
   )

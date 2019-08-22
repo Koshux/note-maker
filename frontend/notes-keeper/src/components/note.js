@@ -16,7 +16,7 @@ export default function Note (props) {
   const classes = useStyles()
 
   function handleKeyUp (event) {
-    props.setData(event.target.value)
+    props.setNote(event.target.value)
   }
 
   return (
@@ -28,6 +28,7 @@ export default function Note (props) {
         defaultValue={props.note}
         placeholder='Enter note description'
         inputProps={{maxLength: 100,'aria-label': 'description'}}
+        data-testid="note"
       />
     </div>
   )
