@@ -54,9 +54,12 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
             throw new BadRequestException("'title' length must be between 1 and 20.");
         }
 
-        // Column-size validation against note-description input.
+        // Missing description and column-length/size validation against note-description input.
         final String description = entity.getDescription();
-        if (description == null || description.length() > noteTable.DESCRIPTION.getDataType().length()) {
+        if (description == null) {
+            LOGGER.error("Note description is missing.");
+            throw new BadRequestException("Note description is missing.");
+        } else if (description.length() > noteTable.DESCRIPTION.getDataType().length()) {
             LOGGER.error(String.format("Note description: '%s' length must be between 1 and 100.", entity.getTitle()));
             throw new BadRequestException("'description' length must be between 1 and 100.");
         }
@@ -67,10 +70,11 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         // Adds the new note.
         LOGGER.debug("Creating new note with ID: {}", nextNoteId);
+        final String title = titleIsEmpty ? "Default" : entity.getTitle();
         int inserted = dslContext
                 .insertInto(noteTable)
                 .columns(noteTable.ID, noteTable.TITLE, noteTable.DESCRIPTION, noteTable.CREATION_DATE)
-                .values(nextNoteId, titleIsEmpty ? "Default" : entity.getTitle(), description, creationDate)
+                .values(nextNoteId, title, description, creationDate)
                 .execute();
 
         // Discard failed attempts to insert and notify the user.
@@ -82,6 +86,7 @@ public class NoteRepositoryImpl extends ResourceRepositoryBase<NoteResource, Lon
 
         // Update the entity `ID` and `creationDate` with what was persisted.
         entity.setId(nextNoteId);
+        entity.setTitle(title);
         entity.setCreationDate(creationDate);
 
         LOGGER.debug("Note successfully created.");

@@ -46,18 +46,35 @@ public class NotesKeeperApplicationTests {
     }
 
     @Test
-    public void testCreate_Success() {
+    public void testCreate_Success_WithTitleAndDescription() {
         // Setup test.
         final NoteResource noteResource = new NoteResource();
         noteResource.setTitle("testCreate_Success");
-        noteResource.setDescription("testCreate_Success description.");
+        noteResource.setDescription("testCreate_Success_WithTitleAndDescription.");
 
         final NoteResource newNote = noteClient.create(noteResource);
 
         final int maxId = dslContext.select(DSL.max(Note.NOTE.ID)).from(Note.NOTE).fetchOneInto(Integer.class);
         Assert.assertEquals(newNote.getId(), maxId);
         Assert.assertEquals(newNote.getTitle(), "testCreate_Success");
-        Assert.assertEquals(newNote.getDescription(), "testCreate_Success description.");
+        Assert.assertEquals(newNote.getDescription(), "testCreate_Success_WithTitleAndDescription.");
+
+        // Teardown test
+        noteClient.delete(maxId);
+    }
+
+    @Test
+    public void testCreate_Success_NoTitleWithDescription() {
+        // Setup test.
+        final NoteResource noteResource = new NoteResource();
+        noteResource.setDescription("testCreate_Success_NoTitleWithDescription.");
+
+        final NoteResource newNote = noteClient.create(noteResource);
+
+        final int maxId = dslContext.select(DSL.max(Note.NOTE.ID)).from(Note.NOTE).fetchOneInto(Integer.class);
+        Assert.assertEquals(newNote.getId(), maxId);
+        Assert.assertEquals(newNote.getTitle(), "Default");
+        Assert.assertEquals(newNote.getDescription(), "testCreate_Success_NoTitleWithDescription.");
 
         // Teardown test
         noteClient.delete(maxId);
@@ -92,6 +109,27 @@ public class NotesKeeperApplicationTests {
         noteResource.setTitle("description too long");
         noteResource.setDescription("testCreate_Failed_DescriptionTooLong description, " +
                 "testCreate_Failed_Description TooLong has failed miserably.");
+
+        // Find the current Max ID before the new note is requested to be added.
+        final int currentMaxId = dslContext.select(DSL.max(Note.NOTE.ID)).from(Note.NOTE).fetchOneInto(Integer.class);
+
+        // Method throws exception due to title.length() is greater than DDL max-length.
+        noteClient.create(noteResource);
+
+        // Most recent Max ID after an attempt to add a new note was made.
+        final int newMaxId = dslContext.select(DSL.max(Note.NOTE.ID)).from(Note.NOTE).fetchOneInto(Integer.class);
+
+        expectedException.expectMessage("'description' length must be between 1 and 100.");
+
+        // The IDs should match since the attempt to add a new note failed.
+        Assert.assertEquals(currentMaxId, newMaxId);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void testCreate_Failed_DescriptionIsMissing() {
+        // Setup resource with the length of the title attribute being larger than what is defined in the DDL.
+        final NoteResource noteResource = new NoteResource();
+        noteResource.setTitle("Missing desc.");
 
         // Find the current Max ID before the new note is requested to be added.
         final int currentMaxId = dslContext.select(DSL.max(Note.NOTE.ID)).from(Note.NOTE).fetchOneInto(Integer.class);

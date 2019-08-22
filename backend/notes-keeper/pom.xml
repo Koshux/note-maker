@@ -152,7 +152,7 @@
                         <configuration>
                             <jdbc>
                                 <driver>com.mysql.cj.jdbc.Driver</driver>
-                                <url>jdbc:mysql://localhost:3306/notemaker?serverTimezone=UTC</url>
+                                <url>jdbc:mysql://localhost:3306/notemaker?serverTimezone=UTC&amp;useSSL=false</url>
                                 <user>root</user>
                                 <password>root</password>
                             </jdbc>
