@@ -1,4 +1,5 @@
 import React from 'react'
+import Utils from './utils'
 import Button from '@material-ui/core/Button'
 
 // JSON:API headers for POST request.
@@ -9,6 +10,7 @@ const requestOpts = {
 }
 
 export default function Send (props) {
+
   // Build JSON:API compliant POST request body.
   const setupRequestData = () => {
     return {
@@ -23,9 +25,14 @@ export default function Send (props) {
 
   // Save the note to the DB.
   const handleClick = () => {
-    let url = 'lanzonprojects/api/notes'
     requestOpts.body = JSON.stringify(setupRequestData())
-    return fetch(url, requestOpts).then(response => response.json())
+    return fetch(Utils.ENDPOINT, requestOpts)
+      .then(response => response.json())
+      .then(() => {
+        // Refresh the notes datatable.
+        props.materialTableRef.current &&
+          props.materialTableRef.current.onQueryChange()
+      })
   }
 
   // No notes found.

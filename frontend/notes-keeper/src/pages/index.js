@@ -18,15 +18,24 @@ export default function IndexPage (props) {
           <Grid item xs={12}></Grid>
 
           <Grid item xs={10}>
-            <Note note={data} setData={setData}/>
+            <Note
+              note={data}
+              setData={setData}
+            />
           </Grid>
 
           <Grid item xs={2}>
-            <Send note={data} setData={setData} />
+            <Send
+              note={data}
+              materialTableRef={props.materialTableRef}
+            />
           </Grid>
 
           <Grid item xs={12}>
-            <DataTable notes={props.notes} />
+            <DataTable
+              notes={props.notes}
+              materialTableRef={props.materialTableRef}
+            />
           </Grid>
         </Grid>
       </Container>

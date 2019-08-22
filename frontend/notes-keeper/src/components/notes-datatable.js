@@ -1,4 +1,5 @@
 import moment from 'moment'
+import Utils from './utils'
 import React, { forwardRef } from 'react'
 import MaterialTable from 'material-table'
 import Refresh from '@material-ui/icons/Refresh'
@@ -30,20 +31,20 @@ const headers = {
 }
 
 export default class NotesDataTable extends React.Component {
-  constructor(props) {
-    super(props)
-    this.tableRef = React.createRef()
-  }
-
   render () {
     return (
       <MaterialTable
         title="Notes"
         icons={tableIcons}
-        tableRef={this.tableRef}
+        tableRef={this.props.materialTableRef}
         columns={[
           { title: 'Description', field: 'description', sorting: false  },
-          { title: 'Creation Date', field: 'creationDate',type: 'datetime' }
+          {
+            title: 'Creation Date',
+            field: 'creationDate',
+            type: 'datetime',
+            defaultSort: 'desc'
+          }
         ]}
         options={{
           add: false,
@@ -56,14 +57,14 @@ export default class NotesDataTable extends React.Component {
           // Find the sort direction.
           const direction = query.orderDirection
           const sort = direction.length === 0
-            ? 'creationDate'
+            ? '-creationDate'
             : (direction === 'asc' ? 'creationDate' : '-creationDate')
 
           // Calculate offset and limit.
           const offset = query.page === 0 ? 0 : query.page * query.pageSize
 
           // Set the API URL.
-          let url = `lanzonprojects/api/notes?sort=${sort}`
+          let url = `${Utils.ENDPOINT}?sort=${sort}`
           url += `&page[offset]=${offset}`
           url += `&page[limit]=${query.pageSize}`
 
@@ -100,15 +101,6 @@ export default class NotesDataTable extends React.Component {
               return reject(err)
             })
         })}
-        actions={[
-          {
-            icon: 'refresh',
-            tooltip: 'Refresh Data',
-            isFreeAction: true,
-            onClick: () => this.tableRef.current &&
-              this.tableRef.current.onQueryChange()
-          }
-        ]}
       />
     )
   }
