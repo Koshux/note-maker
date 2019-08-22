@@ -1,13 +1,17 @@
+import moment from 'moment'
+
 const headers = {
   cache: 'no-cache',
   headers: { 'Content-Type': 'application/vnd.api+json' }
 }
 
+const ENDPOINT = 'lanzonprojects/api/notes'
+
 export default {
   /**
    * JSON:API endpoint for the Notes `POST` and `GET` functionality.
    */
-  ENDPOINT: 'lanzonprojects/api/notes',
+  ENDPOINT,
 
   /**
    * Async function to create a new note. Will perform a POST request
@@ -41,7 +45,7 @@ export default {
       const offset = query.page === 0 ? 0 : query.page * query.pageSize
 
       // Set the API URL.
-      let url = `${this.ENDPOINT}?sort=${sort}`
+      let url = `${ENDPOINT}?sort=${sort}`
       url += `&page[offset]=${offset}`
       url += `&page[limit]=${query.pageSize}`
 
