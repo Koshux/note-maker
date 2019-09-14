@@ -1,0 +1,9 @@
+crnk:
+  resourcePackage: com.lanzonprojects.noteskeeper.domain
+  domainName: http://localhost:8081/lanzonprojects
+  pathPrefix: /api
+  default-page-limit: 20
+
+server:
+  context-path: /lanzonprojects
+  port: 8081

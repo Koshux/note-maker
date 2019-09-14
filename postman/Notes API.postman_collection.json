@@ -1,0 +1,73 @@
+{
+	"info": {
+		"name": "Notes API",
+		"_postman_id": "8973a889-368d-74ae-bcbf-a8f848dce5b2",
+		"description": "API Collection for the `note-maker` tool.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "[GET] - FindAll Notes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8081/lanzonprojects/api/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"lanzonprojects",
+						"api",
+						"notes"
+					]
+				},
+				"description": "Request to fetch all notes stored in the table."
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] - Create Note",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.api+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\": {\n\t\t\"type\": \"notes\",\n\t\t\"attributes\": {\n\t\t\t\"title\": \"Test title 12\",\n\t\t\t\"description\": \"Test description...\",\n\t\t\t\"creationDate\": 1566161999000\n\t\t}\n\t}\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8081/lanzonprojects/api/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"lanzonprojects",
+						"api",
+						"notes"
+					]
+				},
+				"description": "Request to create a new note."
+			},
+			"response": []
+		}
+	]
+}
