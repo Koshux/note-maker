@@ -63,6 +63,56 @@ loaded from your MySQL instance!
 
 <br/>
 
+## Authentication
+Authentication is provided out of the box using Auth0 as the Identity Provider (`IDP`).  It handles a lot of boilerplate which in fact allowed me to create
+this Auth0 tester file within a few minutes and able to access protected
+resources by consuming the token provided by Auth0 (using the API created on
+their application).
+
+
+To authenticate, you must first open the command line at the application by going to:
+
+    https://github.com/Koshux/note-maker/tree/master/auth0/api/note-maker
+
+Then run the following command:
+
+    npm start
+
+This will start a node process by executing the test file `auth-jwt.js` and creates an endpoint to test access by consuming the token.
+
+Next you must request a JWT token by passing in the `client_id` and `client_secret` as credentials, the token `grant_type` as well as the hosted API which will provide the tokens.  Don't forget to replace the placeholder with actual values!
+
+    curl  --request POST \
+      --url https://<host-name>/oauth/token \
+      --header 'content-type: application/json' \
+      --data '{
+          "client_id":"<client-id>",
+          "client_secret":"<client-secret>",
+          "audience":"https://<host-name>/api/v2/",
+          "grant_type":"client_credentials"
+        }'
+
+Once you run the following request you will see a response similar to the following (with the placeholders replaced):
+
+    {
+      "access_token": "<access-token-value>",
+      "expires_in": <expiry-seconds>,
+      "token_type": "Bearer"
+    }
+
+You may then consume the locally hosted API as follows:
+
+    curl --request GET \
+      --url http://<path-to-api>/ \
+      --header 'authorization: Bearer <access-token-value>'
+
+Note:
+If no `Authorization` header is provided in the request, you will see an error similar to the following:
+
+    UnauthorizedError: No authorization token was found
+
+<br/>
+
 ## Backend
  - Application will start on port 8081.
     - `https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot-running-as-a-packaged-application`
