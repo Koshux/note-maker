@@ -1,0 +1,32 @@
+{
+  "name": "note-maker",
+  "version": "1.0.0",
+  "description": "note-maker authentiction tester",
+  "main": "auth-jwt.js",
+  "scripts": {
+    "start": "node auth-jwt.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Koshux/note-maker.git"
+  },
+  "keywords": [
+    "note-taking",
+    "notes",
+    "authentication",
+    "auth0",
+    "oauth"
+  ],
+  "author": "lanzonprojects",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Koshux/note-maker/issues"
+  },
+  "homepage": "https://github.com/Koshux/note-maker#readme",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "jwks-rsa": "^1.6.0"
+  }
+}
