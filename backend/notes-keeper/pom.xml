@@ -22,7 +22,7 @@
         <okhttp.version>3.9.1</okhttp.version>
         <sql-maven.version>1.5</sql-maven.version>
         <crnk.version>2.4.20171211095351</crnk.version>
-        <google-guava.version>28.0-jre</google-guava.version>
+        <google-guava.version>29.0-jre</google-guava.version>
         <maven-properties.version>1.0.0</maven-properties.version>
     </properties>
 
